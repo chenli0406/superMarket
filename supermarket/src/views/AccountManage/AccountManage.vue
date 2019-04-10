@@ -19,10 +19,10 @@
                         <!-- 账号 -->
                         <el-table-column prop="account" label="姓   名" ></el-table-column>
                         <!-- 用户组 -->
-                        <el-table-column prop="userGroup" label="用 户 组" ></el-table-column>
+                        <el-table-column prop="user_group" label="用 户 组" ></el-table-column>
                         <!-- 日期 -->
                         <el-table-column  label="日   期" >
-                        <template slot-scope="scope">{{ scope.row.createDate }}</template>
+                        <template slot-scope="scope">{{ scope.row.create_date | filterDate }}</template>
                         </el-table-column>
                           
                            <!-- 操作 -->
@@ -73,34 +73,66 @@
     </div>
 </template>
 <script>
+//引入moment
+import moment from "moment";
 export default {
   data() {
     return {
       // 账号表格数据
-      accountTableData: [
-        {
-          account: "李寻欢",
-          userGroup: "超级管理员",
-          createDate: "2019-04-08"
-        }
-      ],
-      currentPage : 1,
+      accountTableData: [],
+      currentPage: 1
     };
   },
-  methods:{
-     handleEdit(){
+  methods: {
+    handleEdit() {},
+    handleDelete(index, row) {
+      const id = this.accountTableData[index].id;
+      console.log(id);
+      this.request.get("/account/accountDelete", { id })
+        .then(res => {
+          //获取后端响应回来的数据
+          let { code, reason } = res;
+          //判断
+          if (code === 0) {
+            //弹成功提示
+            this.$message({
+              type: "success",
+              message: reason
+            });
+           location.reload();
+            
+          } else if (code === 1) {
+            //弹失败提示
+            this.$message.error(reason);
+          }
+        })
+        .catch(err => {
+          console.log("失败", err);
+        });
+    },
+    handleSizeChange() {},
 
-     },
-     handleDelete(){
-
-     },
-     handleSizeChange(){
-
-     },
-     handleCurrentChange(){
-
-     }
-
+    handleCurrentChange() {}
+  },
+  // Vue生命周期 钩子函数，Vue实例创建完成，dom没生成
+  created() {
+    //发送axios 请求所有数据
+    this.request
+      .get("/account/accountlist")
+      .then(res => {
+        //后端请求的数据 赋值给accountTableDate;
+        // console.log(res);
+        this.accountTableData = res;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  },
+  filters: {
+    //过滤时间
+    filterDate(time) {
+      return moment(time).format("YYYY-MM-DD hh:mm");
+    }
   }
 };
 </script>

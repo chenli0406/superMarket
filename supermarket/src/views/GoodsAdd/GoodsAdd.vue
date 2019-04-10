@@ -157,7 +157,7 @@ export default {
     },
     //生成随机条形码
     addBarCode(){
-      var str='69';
+      var str='19';
       for(var i=0;i<10;i++){
         str+=Math.floor(Math.random()*10);
        }

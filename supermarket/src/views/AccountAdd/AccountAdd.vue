@@ -32,15 +32,15 @@
                         <el-input type="password" v-model="accountAddForm.checkPass" autocomplete="off"></el-input>
                     </el-form-item>
                     <!-- 选择用户组 -->
-                      <el-form-item label="选择用户组" prop="userGroup">
-                        <el-select v-model="accountAddForm.userGroup" placeholder="请选择用户组">
+                      <el-form-item label="选择用户组" prop="user_group">
+                        <el-select v-model="accountAddForm.user_group" placeholder="请选择用户组">
                         <el-option label="超级管理员" value="超级管理员"></el-option>
                         <el-option label="普通用户" value="普通用户"></el-option>
                         </el-select>
                     </el-form-item>
 
                     <el-form-item>
-                        <el-button type="primary" @click="submitForm()">登录</el-button>
+                        <el-button type="primary" @click="submitForm()">添加</el-button>
                         <el-button @click="resetForm()">重置</el-button>
                     </el-form-item>
                 </el-form>
@@ -51,6 +51,9 @@
 <script>
 // 引入验证密码函数
 import { passwordReg } from "@/utils/validator";
+//引入qs
+import qs from "qs";
+
 export default {
   data() {
     //密码自定义验证函数
@@ -90,7 +93,7 @@ export default {
         account: "",
         password: "",
         checkPass: "",
-        userGroup: ""
+        user_group: ""
       },
       //验证规则
       rules: {
@@ -112,34 +115,52 @@ export default {
           { required: true, validator: confirmPassword, trigger: "blur" }
         ],
         // 用户组
-        userGroup: [
-           { required: true, message: '请选择用户组', trigger: 'change'} // 非空
+        user_group: [
+          { required: true, message: "请选择用户组", trigger: "change" } // 非空
         ]
       }
     };
   },
   methods: {
     submitForm() {
-       this.$refs.accountAddForm.validate(valid =>{
-         //如果所有前端验证通过，valid就是true，否则就是false
-         if (valid) {
+      this.$refs.accountAddForm.validate(valid => {
+        //如果所有前端验证通过，valid就是true，否则就是false
+        if (valid) {
           //提交数据给后台
-          let params ={
-              account:this.accountAddForm.account,
-              password:this.accountAddForm.password,
-              userGroup:this.accountAddForm.userGroup
+          let params = {
+            account: this.accountAddForm.account,
+            password: this.accountAddForm.password,
+            user_group: this.accountAddForm.user_group
           };
-          console.log(params);
-          
-         alert("登录成功");
-          //路由跳转
-          this.$router.push("/home/accountmanage")
+          //发送axios请求，把数据发给后端
+          this.request.post("/account/accountAdd", params)
+            .then(res => {
+              //回去后端响应回来的数据
+              let { code, reason } = res;
+              //判断
+              if (code === 0) {
+                //弹成功提示
+                this.$message({
+                  type: "success",
+                  message: reason
+                });
 
-         }else{
-           console.log("前端验证不通过，不允许提交！");
-           return;  
-         }
-       })
+                //路由跳转
+                this.$router.push('/home/accountmanage')
+                
+              } else if (code === 1) {
+                //弹失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log("失败", err);
+            });
+        } else {
+          console.log("前端验证不通过，不允许提交！");
+          return;
+        }
+      });
     },
     resetForm() {
       // 重置表单
