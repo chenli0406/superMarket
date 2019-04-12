@@ -18,16 +18,16 @@
             
             >
             <!-- 所属分类 -->
-            <el-form-item  prop="region" style="width: 150px;">
-                <el-select v-model="goodsAddFrom.region" placeholder="---所属分类---">
+            <el-form-item  prop="user_group" style="width: 150px;">
+                <el-select v-model="goodsAddFrom.user_group" placeholder="---所属分类---">
                 <el-option label="食品类" value="食品类"></el-option>
                 <el-option label="生活类" value="生活类"></el-option>
                 </el-select>
             </el-form-item>
 
              <!--商品条形码  -->
-            <el-form-item label="商品条形码" prop="goodsBarCode" inline="true" class="demo-form-inline">
-                 <el-input v-model="goodsAddFrom.goodsBarCode"></el-input>
+            <el-form-item label="商品条形码" prop="goodsBarCode" inline="true" class="demo-form-inline" >
+                 <el-input   v-model="goodsAddFrom.goodsBarCode"></el-input>
               <el-button class="btn" type="success" @click="addBarCode">生成条形码</el-button>
             </el-form-item>
 
@@ -93,12 +93,13 @@
     </div>
 </template>
 <script>
-
+//引入qs
+import qs from "qs";
 export default {
   data() {
     return {
-      goodsAddFrom: {
-        region: "",
+       goodsAddFrom: {
+        user_group: "",
         goodsBarCode:"",
         goodsname: "",
         goodPrice: "",
@@ -113,7 +114,7 @@ export default {
       //验证规则
       rules: {
         //所属分类
-        region: [
+         user_group: [
           { required: true, message: "请选择分类", trigger: "change" } // 非空
         ],
         //商品条形码
@@ -139,10 +140,45 @@ export default {
         //如果所有前端验证通过，valid就是true，否则就是false
         if (valid) {
           //提交数据给后台
-          let params = {};
-          console.log(params);
+          let params = {
+             user_group:this.goodsAddFrom.user_group,
+             goodsBarCode:this.goodsAddFrom.goodsBarCode,
+             goodsname:this.goodsAddFrom.goodsname,
+             goodPrice:this.goodsAddFrom.goodPrice,
+             marketPrice:this.goodsAddFrom.marketPrice,
+             purchasePrice:this.goodsAddFrom.purchasePrice,
+             WarehousingNum:this.goodsAddFrom.WarehousingNum,
+             goodWeight:this.goodsAddFrom.goodWeight,
+             memberUnit:this.goodsAddFrom.memberUnit,
+             memberDiscount:this.goodsAddFrom.memberDiscount,
+             goodsIntroduction:this.goodsAddFrom.goodsIntroduction
 
-          alert("添加成功");
+          };
+          console.log(params);
+       //发送axios请求，把数据发给后端
+          this.request.post("/goods/goodsAdd", params)
+            .then(res => {
+              //回去后端响应回来的数据
+              let { code, reason } = res;
+              //判断
+              if (code === 0) {
+                //弹成功提示
+                this.$message({
+                  type: "success",
+                  message: reason
+                });
+
+                //路由跳转
+                this.$router.push('/home/goodsmanage')
+                
+              } else if (code === 1) {
+                //弹失败提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log("失败", err);
+            });
           //路由跳转
           this.$router.push("/home/goodsmanage");
         } else {
@@ -162,6 +198,14 @@ export default {
         str+=Math.floor(Math.random()*10);
        }
       console.log(str);
+
+      this.goodsAddFrom.goodsBarCode=str;
+
+     //const code=document.querySelector(".text1");
+
+     //console.log(code);
+     //code.innerHTML=str;
+     
     }
   }
 };

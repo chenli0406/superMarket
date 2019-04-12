@@ -11,23 +11,32 @@ router.all('*', (req, res, next) => {
 })
 
 // 添加账号路由--------------------------------------------------
-router.post('/accountAdd', (req, res) => {
+router.post('/goodsAdd', (req, res) => {
 
 	//接受前端发来的数据
 	let {
-		account,
-		password,
-		user_group
+        user_group,
+        goodsBarCode,
+        goodsname,
+        goodPrice,
+        marketPrice,
+        purchasePrice,
+        WarehousingNum,
+        goodWeight,
+        memberUnit,
+        memberDiscount,
+        goodsIntroduction
 	} = req.body;
-	//console.log( account,password,user_group);
-	//sql语句
-	const sqlStr = `insert into account(account, password, user_group) values('${account}','${password}','${user_group}')`;
-	// console.log(sqlStr); 测试
+	// //sql语句
+    const sqlStr = `insert into goods(user_group,goodsbarcode,goodsname,goodPrice,marketPrice,purchasePrice,WarehousingNum,
+                    goodsweight,memberUnit,memberDiscount,goodsIntroduction) values('${user_group}','${goodsBarCode}','${goodsname}',${goodPrice},${marketPrice},${purchasePrice}
+                    ,${WarehousingNum},${goodWeight},'${memberUnit}','${memberDiscount}','${goodsIntroduction}')`;
+	console.log(sqlStr); //测试
 	//执行sql
 	connection.query(sqlStr, (err, data) => {
 		if (err) throw err;
 		//判断受影响大于0 代表成功 否则失败
-		 if (data.affectedRows > 0) {
+		if (data.affectedRows > 0) {
 			//响应成功的数据对象给前端
 			res.send({
 				code: 0,
@@ -41,15 +50,13 @@ router.post('/accountAdd', (req, res) => {
 			})
 		}
 
-	})
-
+    })
 })
 
 //请求账号列表路由
-
-router.get('/accountlist', (req, res) => {
+router.get('/goodslist', (req, res) => {
 	// 写sql
-	const sqlStr = `select * from account order by create_date desc`;
+	const sqlStr = `select * from goods order by create_time desc`;
 	// 执行sql
 	connection.query(sqlStr, (err, data) => {
 		if (err) throw err;
@@ -58,12 +65,12 @@ router.get('/accountlist', (req, res) => {
 })
 
 //删除账号路由
-router.get('/accountDelete',(req,res)=>{
+router.get('/goodsDelete',(req,res)=>{
 	// res.send(1);
 	let{id}=req.query;
 	//console.log(id);
 	//删除sql
-	const sqlStr = `delete from account where id=${id}`;
+	const sqlStr = `delete from goods where id=${id}`;
 	console.log(sqlStr);
 	
 	//执行
@@ -89,13 +96,13 @@ router.get('/accountDelete',(req,res)=>{
 })
 
 //修改账号
-router.get('/accountEdit',(req,res)=>{
+router.get('/goodsEdit',(req,res)=>{
 	
 	let{id}=req.query;
 	console.log(id);
 	
 	//查询
-	const sqlStr = `select * from account where id=${id}`;
+	const sqlStr = `select * from goods where id=${id}`;
 	//console.log(sqlStr); 
 		//执行
 		connection.query(sqlStr,(err,data)=>{
@@ -114,11 +121,27 @@ router.get('/accountEdit',(req,res)=>{
 //修改保存
 router.post('/saveEdit',(req,res)=>{
 	//接受参数
-	let{account,user_group,editId}=req.body;
+	let{  
+		user_group,
+        goodsBarCode,
+        goodsname,
+        goodPrice,
+        marketPrice,
+        purchasePrice,
+        WarehousingNum,
+        goodWeight,
+        memberUnit,
+        memberDiscount,
+		goodsIntroduction,
+		editId
 
+	}=req.body;
 	//修改SQL
-	const sqlStr = `update account set account='${account}',user_group='${user_group}' where id=${editId}`;
-
+	const sqlStr = `update goods set user_group='${user_group}',goodsbarcode='${goodsBarCode}',goodsname='${goodsname}',goodPrice=${goodPrice},
+					marketPrice=${marketPrice},purchasePrice=${purchasePrice},WarehousingNum=${WarehousingNum},goodsweight=${goodWeight},
+					memberUnit='${memberUnit}',memberDiscount='${memberDiscount}',goodsIntroduction='${goodsIntroduction}'
+	where id=${editId}`;
+	
 	//执行
 	connection.query(sqlStr,(err,data)=>{
 		if(err) throw err;
@@ -145,7 +168,7 @@ router.post('/saveEdit',(req,res)=>{
 router.get('/batchDelete',(req,res)=>{
 	let{ idArr }=req.query;
 	//删除sql
-	const sqlStr = `delete from account where id in (${idArr})`;
+	const sqlStr = `delete from goods where id in (${idArr})`;
 	// console.log(sqlStr);
 	//执行SQL
 	connection.query(sqlStr,(err,data)=>{
@@ -168,15 +191,17 @@ router.get('/batchDelete',(req,res)=>{
 })
 	
 //分页功能
-router.get('/accountlistbypage',(req,res)=>{
+router.get('/goodslistbypage',(req,res)=>{
 	//接受参数
 	let { currentPage,pageSize }=req.query;
 	//查询sql
-	let sqlStr = `select * from account order by create_date desc`;
+	let sqlStr = `select * from goods order by create_time desc`;
 
 	//执行sql
 	connection.query(sqlStr,(err,data)=>{
 		if(err) throw err;
+		console.log(data);
+		
 		//计算总条数
 		let total=data.length;
 		//计算跳过多少条
@@ -193,4 +218,5 @@ router.get('/accountlistbypage',(req,res)=>{
 	})
 	
 })
+
 module.exports = router;

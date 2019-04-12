@@ -40,9 +40,9 @@
                         <el-table-column prop="goodsname" label="商品名称" width="160"></el-table-column>
                       
                        <!-- 进价(元 -->
-                        <el-table-column prop="onsales" label="进价(元)" width="160"></el-table-column>
+                        <el-table-column prop="purchasePrice" label="进价(元)" width="160"></el-table-column>
                        <!-- 入    库 -->
-                        <el-table-column prop="marketPrice" label="入库" width="160"></el-table-column>
+                        <el-table-column prop="goodscount" label="入库" width="160"></el-table-column>
                        <!-- 库    存 -->
                         <el-table-column prop="WarehousingNum" label="库    存" width="160"></el-table-column> 
                 <!-- 操作 -->
@@ -109,8 +109,8 @@ export default {
         {
          goodsBarCode : '1336452000',
          goodsname : '泡面',
-         onsales : '4.5',
-         marketPrice : '5',
+         purchasePrice : '4.5',
+         goodscount : '5',
          WarehousingNum  :'20'
 
         }

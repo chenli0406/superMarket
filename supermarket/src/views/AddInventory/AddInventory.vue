@@ -17,18 +17,18 @@
              
             >
              <!--商品条形码  -->
-            <el-form-item label="商品条形码" prop="goodsBarCode1" inline="true" class="demo-form-inline">
-                 <el-input v-model="goodsInventoryFrom.goodsBarCode1"></el-input>
+            <el-form-item label="商品条形码" prop="goodsBarCode" inline="true" class="demo-form-inline">
+                 <el-input v-model="goodsInventoryFrom.goodsBarCode"></el-input>
             </el-form-item>
 
               <!--入库数量 -->
-            <el-form-item label="数量" prop="WarehousingNum1" style="width: 150px;">
-                <el-input v-model="goodsInventoryFrom.WarehousingNum1"></el-input>
+            <el-form-item label="数量" prop="goodscount" style="width: 150px;">
+                <el-input v-model="goodsInventoryFrom.goodscount"></el-input>
             </el-form-item>
 
              <!--商品进价 -->
-            <el-form-item label="进价" prop="purchasePrice1" style="width: 150px;">
-                <el-input v-model="goodsInventoryFrom.purchasePrice1"></el-input>
+            <el-form-item label="进价" prop="purchasePrice" style="width: 150px;">
+                <el-input v-model="goodsInventoryFrom.purchasePrice"></el-input>
             </el-form-item>
              
             <el-form-item>
@@ -45,23 +45,23 @@ export default {
     data () {
         return {
            goodsInventoryFrom :{
-               goodsBarCode1: '',
-               WarehousingNum1 :'',
-               purchasePrice1 : ''
+               goodsBarCode: '',
+               goodscount :'',
+               purchasePrice : ''
            },
             //验证规则
         rules: {
             //商品条形码
-            goodsBarCode1: [
+            goodsBarCode: [
             { required: true, message: "请输入商品条形码", trigger: "blur" }
             ],
             // <!--商品数量  -->
-            WarehousingNum1: [
+           goodscount: [
             //非空
             { required: true, message: "请输入商品数量", trigger: "blur" }
             ],
             // <!--进价 -->
-            purchasePrice1: [
+            purchasePrice: [
             //非空
             { required: true, message: "请输入商品进价", trigger: "blur" }
             ]
@@ -75,7 +75,7 @@ export default {
         if (valid) {
           //提交数据给后台
           let params = {
-             goodsBarCode1:this.goodsInventoryFrom.goodsBarCode1,
+             goodsBarCode:this.goodsInventoryFrom.goodsBarCode,
           };
           console.log(params);
 
