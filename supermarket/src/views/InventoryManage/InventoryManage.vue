@@ -35,16 +35,18 @@
                          <!-- 选择框 -->
                         <el-table-column type="selection" width="55"></el-table-column>
                         <!-- 商品条形码 -->
-                        <el-table-column prop="goodsBarCode" label="商品条形码" width="160" ></el-table-column>
+                        <el-table-column prop="goodsBarCode" label="商品条形码" width="140" ></el-table-column>
                         <!-- 商品名称 -->
-                        <el-table-column prop="goodsname" label="商品名称" width="160"></el-table-column>
+                        <el-table-column prop="goodsname" label="商品名称" width="140"></el-table-column>
                       
                        <!-- 进价(元 -->
-                        <el-table-column prop="purchasePrice" label="进价(元)" width="160"></el-table-column>
+                        <el-table-column prop="purchasePrice" label="进价(元)" width="140"></el-table-column>
                        <!-- 入    库 -->
-                        <el-table-column prop="goodscount" label="入库" width="160"></el-table-column>
+                        <el-table-column prop="goodscount" label="入库" width="140"></el-table-column>
+                          <!-- 已  售 -->
+                        <el-table-column prop="onsales" label="已售" width="140"></el-table-column>
                        <!-- 库    存 -->
-                        <el-table-column prop="WarehousingNum" label="库    存" width="160"></el-table-column> 
+                        <el-table-column prop="WarehousingNum" label="库    存" width="140"></el-table-column> 
                 <!-- 操作 -->
                 <el-table-column label="管  理">
                    <template slot-scope="scope">
@@ -70,12 +72,7 @@
                 </template>
               </el-table-column>
            </el-table>
-               <!-- 批量删除&取消选择 -->
-                    <div style="margin-top: 20px">
-                        <el-button type="primary" size="mini">批量删除</el-button>
-                        <el-button type="success" size="mini">取消选择</el-button>
-                    </div>
-
+             
                <!-- 分页组件 -->
                  <div style="margin-top: 20px">
                     <el-pagination
@@ -111,7 +108,8 @@ export default {
          goodsname : '泡面',
          purchasePrice : '4.5',
          goodscount : '5',
-         WarehousingNum  :'20'
+         WarehousingNum  :'20',
+         onsales:5
 
         }
       ],
@@ -127,9 +125,7 @@ export default {
     //商品列表方法
      handleEdit(){
 
-     },
-     handleDelete(){
-
+    
      },
      handleSizeChange(){
 

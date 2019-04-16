@@ -5,8 +5,18 @@ import axios from 'axios'
 //引入qs
 import qs from 'qs'
 
+import local from "@/utils/local"
 //设置路径
-axios.defaults.baseURL='http://localhost:666'
+axios.defaults.baseURL='http://127.0.0.1:666'
+
+//axios请求拦截器
+axios.interceptors.request.use(config => {
+    // 获取token
+    const token = local.get('c_h_e_n');
+    config.headers.authorization = `Bearer ${token}` 
+    return config;
+})
+
 
 //导出请求对象
 export default {

@@ -42,59 +42,78 @@
 </template>
 <script>
 export default {
-    data () {
-        return {
-           goodsInventoryFrom :{
-               goodsBarCode: '',
-               goodscount :'',
-               purchasePrice : ''
-           },
-            //验证规则
-        rules: {
-            //商品条形码
-            goodsBarCode: [
-            { required: true, message: "请输入商品条形码", trigger: "blur" }
-            ],
-            // <!--商品数量  -->
-           goodscount: [
-            //非空
-            { required: true, message: "请输入商品数量", trigger: "blur" }
-            ],
-            // <!--进价 -->
-            purchasePrice: [
-            //非空
-            { required: true, message: "请输入商品进价", trigger: "blur" }
-            ]
-        } 
-        }
-    },
-     methods: {
-     addsubmit() {
+  data() {
+    return {
+      goodsInventoryFrom: {
+        goodsBarCode: "",
+        goodscount: "",
+        purchasePrice: ""
+      },
+      //验证规则
+      rules: {
+        //商品条形码
+        goodsBarCode: [
+          { required: true, message: "请输入商品条形码", trigger: "blur" }
+        ],
+        // <!--商品数量  -->
+        goodscount: [
+          //非空
+          { required: true, message: "请输入商品数量", trigger: "blur" }
+        ],
+        // <!--进价 -->
+        purchasePrice: [
+          //非空
+          { required: true, message: "请输入商品进价", trigger: "blur" }
+        ]
+      }
+    };
+  },
+  methods: {
+    addsubmit() {
       this.$refs.goodsInventoryFrom.validate(valid => {
         //如果所有前端验证通过，valid就是true，否则就是false
         if (valid) {
           //提交数据给后台
           let params = {
-             goodsBarCode:this.goodsInventoryFrom.goodsBarCode,
+            goodsBarCode: this.goodsInventoryFrom.goodsBarCode,
+            goodscount: this.goodsInventoryFrom.goodscount,
+            purchasePrice: this.goodsInventoryFrom.purchasePrice
           };
-          console.log(params);
 
-          alert("添加成功");
-          //路由跳转
-          this.$router.push("/home/inventorymanage");
-        } else {
-          console.log("前端验证不通过，不允许提交！");
-          return;
+          //发送axios请求，把数据发给后端
+          this.request
+            .post("/goods/goodsInventory", params)
+            .then(res => {
+              //接受后端响应的数据
+              let { code, reason } = res;
+              if (code === 0) {
+                //提示成功
+                this.$message({
+                  type: "success",
+                  message: reason
+                });
+              
+               //路由跳转
+             this.$router.push("/home/inventorymanage");
+              } else if (code === 1) {
+                // 弹提示
+                this.$message.error(reason);
+              }
+            })
+            .catch(err => {
+              console.log(err);
+            });
+
         }
       });
     },
-     resetForm() {
+    resetForm() {
       // 重置表单
       this.$refs.goodsInventoryFrom.resetFields();
-    },
+    }
   }
-}
+};
 </script>
 <style lang="less">
-@import './addinventory.less';
+@import "./addinventory.less";
 </style>

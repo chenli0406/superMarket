@@ -35,79 +35,25 @@ export default {
   data() {
     return {
       //导航菜单数据
-      menus: [
-        //系统管理
-        {
-          inconClass: "el-icon-document",
-          title: "系统管理",
-          //子菜单
-          children: [{ path: "/home/systeminfo", subTitle: "系统信息" }]
-        },
-        //账号管理
-        {
-          inconClass: "el-icon-star-on",
-          title: "账号管理",
-          //子菜单
-          children: [
-            { path: "/home/accountmanage", subTitle: "账号管理" },
-            { path: "/home/accountadd", subTitle: "添加账号" },
-            { path: "/home/passwordmodify", subTitle: "密码修改" }
-          ]
-        },
-        //商品管理
-        {
-          inconClass: "el-icon-circle-plus",
-          title: "商品管理",
-          //子菜单
-          children: [
-            { path: "/home/goodsmanage", subTitle: "商品管理" },
-            { path: "/home/goodsadd", subTitle: "添加商品" }
-          ]
-        },
-        //统计管理
-        {
-          inconClass: "el-icon-edit-outline",
-          title: "统计管理",
-          //子菜单
-          children: [
-            { path: "/home/salestotal", subTitle: "销售统计" },
-            { path: "/home/stocktotal", subTitle: "进货统计" }
-          ]
-        },
-        //进货管理
-        {
-          inconClass: "el-icon-news",
-          title: "进货管理",
-          //子菜单
-          children: [
-            { path: "/home/addinventory", subTitle: "添加库存" },
-            { path: "/home/inventorymanage", subTitle: "库存管理" }
-          ]
-        },
-        //出货管理
-        {
-          inconClass: "el-icon-time",
-          title: "出货管理",
-          //子菜单
-          children: [
-            { path: "/home/saleslist", subTitle: "销售列表" },
-            { path: "/home/goodsoutofstock", subTitle: "商品出库" },
-            { path: "/home/goodsreturn", subTitle: "商品退货" }
-          ]
-        },
-        //会员管理
-        {
-          inconClass: "el-icon-edit",
-          title: "会员管理",
-          //子菜单
-          children: [
-            { path: "/home/membershipaccount", subTitle: "账号管理" },
-            { path: "/home/membersaddaccounts", subTitle: "添加账号" }
-          ]
+      menus: []
+    }
+  },
+    methods: {
+        getMenus() {
+            this.request.get('/account/menus')
+             .then(res => {
+                // 接收后端响应的菜单
+                this.menus = res.accessMenu;
+             })
+             .catch(err => {
+                 console.log(err)
+             })
         }
-      ]
-    };
-  }
+    },
+    created() {
+        // 调用请求 请求菜单数据
+        this.getMenus();
+    }
 };
 </script>
 <style lang="less">

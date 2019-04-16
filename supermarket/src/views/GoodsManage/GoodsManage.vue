@@ -10,10 +10,13 @@
         <div class="text item">
             <!-- 查询 -->
             <el-form :inline="true" :model="queryForm" ref="queryForm"  class="demo-form-inline">
-                    <el-form-item style="width:150px">
-                        <el-select v-model="queryForm.region" placeholder="--选择分类--">
-                        <el-option label="区域一" value="shanghai"></el-option>
-                        <el-option label="区域二" value="beijing"></el-option>
+                    <el-form-item style="width:150px" prop="user_group">
+                        <el-select v-model="queryForm.user_group" placeholder="--选择分类--" >
+                           <el-option label="全部" value="全部"></el-option>
+                          <el-option label="食品类" value="食品类"></el-option>
+                          <el-option label="生活类" value="生活类"></el-option>
+                          <el-option label="电子类" value="电子类"></el-option>
+                          <el-option label="美妆" value="美妆"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="关键字:">
@@ -39,6 +42,8 @@
                         <el-table-column prop="goodsbarcode" label="商品条形码"></el-table-column>
                         <!-- 商品名称 -->
                         <el-table-column prop="goodsname" label="商品名称" ></el-table-column>
+                        <!-- 分类 -->
+                          <el-table-column prop="user_group" label="分类" ></el-table-column>
                         <!--售价(元)  -->
                         <el-table-column prop="goodPrice" label="售价(元)"></el-table-column>
                          <!--商品进价(元)  -->
@@ -77,47 +82,50 @@
           <el-dialog width="800px" title="添加商品修改" :visible.sync="dialogFormVisible">
             <el-form :model="editform"  :rules="rules"    ref="editform" >
                  <!-- 所属分类 -->
-            <el-form-item  prop="user_group" style="width: 150px;">
+            <el-form-item  prop="user_group" style="width: 200px;">
                 <el-select v-model="editform.user_group" placeholder="---所属分类---">
                 <el-option label="食品类" value="食品类"></el-option>
                 <el-option label="生活类" value="生活类"></el-option>
+                <el-option label="电子类" value="电子类"></el-option>
+                <el-option label="美妆" value="美妆"></el-option>
+
                 </el-select>
             </el-form-item>
 
              <!--商品条形码  -->
-            <el-form-item label="商品条形码" prop="goodsBarCode" inline="true" class="demo-form-inline" style="width: 150px;" >
+            <el-form-item label="商品条形码 (不能修改)" prop="goodsBarCode" inline="true" class="demo-form-inline" style="width: 200px;" >
                  <el-input    v-model="editform.goodsBarCode" readonly unselecttable="on"></el-input>
             </el-form-item>
 
             <!--商品名称  -->
-            <el-form-item label="商品名称" prop="goodsname" style="width: 150px;">
+            <el-form-item label="商品名称" prop="goodsname" style="width: 200px;">
                 <el-input v-model="editform.goodsname"></el-input>
             </el-form-item>
 
             <!--商品售价 -->
-            <el-form-item label="商品售价" prop="goodPrice" style="width: 150px;">
+            <el-form-item label="商品售价" prop="goodPrice" style="width: 200px;">
                 <el-input v-model="editform.goodPrice"></el-input>
             </el-form-item>
 
             <!--市场价 -->
-            <el-form-item label="市场价" prop="marketPrice" style="width: 150px;">
+            <el-form-item label="市场价" prop="marketPrice" style="width: 200px;">
                 <el-input v-model="editform.marketPrice"></el-input>
                  <span class="title">默认市场价为售价的1.2倍</span>
             </el-form-item>
 
              <!--商品进价 -->
-            <el-form-item label="商品进价" prop="purchasePrice" style="width: 150px;">
+            <el-form-item label="商品进价" prop="purchasePrice" style="width: 200px;">
                 <el-input v-model="editform.purchasePrice"></el-input>
             </el-form-item>
              
               <!--入库数量 -->
-            <el-form-item label="入库数量" prop="WarehousingNum" style="width: 150px;">
+            <el-form-item label="入库数量" prop="WarehousingNum" style="width: 200px;">
                 <el-input v-model="editform.WarehousingNum"></el-input>
                 <span class="title">记重商品单位为千克</span>
             </el-form-item>
 
              <!--商品重量 -->
-            <el-form-item label="商品重量" prop="goodWeight" style="width: 150px;">
+            <el-form-item label="商品重量" prop="goodWeight" style="width: 200px;">
                 <el-input v-model="editform.goodWeight"></el-input>
             </el-form-item>
 
@@ -158,7 +166,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
-                        :page-sizes="[1, 5, 10, 15]"
+                        :page-sizes="[3, 5, 10, 15]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total">
@@ -176,7 +184,7 @@ export default {
     return {
       // 查询
       queryForm: {
-        region: "",
+        user_group: "",
         key: ""
       },
        //修改模板数据
@@ -194,7 +202,24 @@ export default {
        goodsIntroduction:'',
       },
       //验证
-      rules:{},
+      rules:{
+             //所属分类
+         user_group: [
+          { required: true, message: "请选择分类", trigger: "change" } // 非空
+        ],
+        // <!--商品名称  -->
+        goodsname: [
+          //非空
+          { required: true, message: "请输入商品名称", trigger: "blur" }
+        ],
+        // <!--商品售价 -->
+        goodPrice: [
+          //非空
+          { required: true, message: "请输入商品售价", trigger: "blur" }
+        ]
+
+
+      },
       //商品列表
       // 表格数据
       goodsTableData: [],
@@ -217,7 +242,7 @@ export default {
   methods: {
     // 查询
     queryform() {
-      console.log("submit!");
+      this.getgoodslist();
     },
 
     //显示列表
@@ -225,8 +250,12 @@ export default {
       //收集参数
       let params = {
         currentPage: this.currentPage,
-        pageSize: this.pageSize
+        pageSize: this.pageSize,
+        user_group:this.queryForm.user_group,
+        key:this.queryForm.key
       };
+      console.log(params);
+      
       //发送axios 请求所有数据
       this.request
         .get("/goods/goodslistbypage", params)

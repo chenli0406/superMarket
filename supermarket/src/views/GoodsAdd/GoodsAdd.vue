@@ -20,8 +20,11 @@
             <!-- 所属分类 -->
             <el-form-item  prop="user_group" style="width: 150px;">
                 <el-select v-model="goodsAddFrom.user_group" placeholder="---所属分类---">
-                <el-option label="食品类" value="食品类"></el-option>
+               <el-option label="食品类" value="食品类"></el-option>
                 <el-option label="生活类" value="生活类"></el-option>
+                <el-option label="电子类" value="电子类"></el-option>
+                <el-option label="美妆" value="美妆"></el-option>
+               
                 </el-select>
             </el-form-item>
 
@@ -154,7 +157,6 @@ export default {
              goodsIntroduction:this.goodsAddFrom.goodsIntroduction
 
           };
-          console.log(params);
        //发送axios请求，把数据发给后端
           this.request.post("/goods/goodsAdd", params)
             .then(res => {

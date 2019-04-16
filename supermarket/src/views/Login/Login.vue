@@ -37,6 +37,8 @@
 <script>
 // 引入验证密码函数
 import { passwordReg } from "@/utils/validator";
+//引入local
+import local from "@/utils/local"
 export default {
   data() {
     //确认密码自定义验证函数
@@ -111,9 +113,34 @@ export default {
             account: this.loginForm.account,
             password: this.loginForm.password
           };
-          alert("登录成功");
-          //路由跳转
-          this.$router.push("/home");
+          console.log(params);
+          // 发送axios给后端，把账号和密码发送给后端
+          this.request.post('/login/checklogin',params)
+          .then(res=>{
+          //接受后台响应的数据
+         let {code, reason, token} = res;
+          //判断
+          console.log(token);
+          
+          if(code === 0){
+            //把token存入浏览器
+            local.save('c_h_e_n',token)
+            
+            //弹出成功提示
+            this.$message({
+              type:"success",
+              message:reason
+            })
+            //跳转到首页
+            this.$router.push('/home')
+          }else if(code === 1){
+            this.$message.error(reason)
+          }
+           
+          })
+          .catch(err=>{
+          console.log(err)
+          })
         } else {
           console.log("前端验证不通过，不允许提交！");
           return;

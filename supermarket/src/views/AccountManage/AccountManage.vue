@@ -85,7 +85,7 @@
                         @size-change="handleSizeChange"
                         @current-change="handleCurrentChange"
                         :current-page="currentPage"
-                        :page-sizes="[1, 5, 10, 15]"
+                        :page-sizes="[3, 5, 10, 15]"
                         :page-size="pageSize"
                         layout="total, sizes, prev, pager, next, jumper"
                         :total="total">
@@ -255,6 +255,8 @@ export default {
               } else if (code === 1) {
                 //弹失败提示
                 this.$message.error(reason);
+              }else if(code === 2){
+                this.$message.error(reason)
               }
             })
             .catch(err => {

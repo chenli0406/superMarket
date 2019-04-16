@@ -51,6 +51,7 @@
 <script>
 // 引入验证密码函数
 import { passwordReg } from "@/utils/validator";
+
 //引入qs
 import qs from "qs";
 
@@ -87,6 +88,32 @@ export default {
       }
     };
 
+
+    //  // 账户是否存在
+    // const validatorcheckAccount = (rules, value, callback) => {
+    //  //发送axios给后端
+    //  this.request.post('/account/checkAccount',{account:value})
+    //  .then(res=>{
+    //   //  //接受响应的数据
+    //   //  let{code,reason}=res;
+    //   //  //判断
+    //   //  if(code === 0){
+    //   //    callback()
+    //   //  }
+    //   //  else{
+    //   //    callback(new Error(reason))
+    //   //  }
+    //    console.log(res);
+       
+    //  })
+    //  .catch(err=>{
+    //   console.log(err);
+      
+    //  })
+
+
+    // };
+
     return {
       //表单验证
       accountAddForm: {
@@ -99,9 +126,7 @@ export default {
       rules: {
         //账号
         account: [
-          //非空
-          { required: true, message: "请输入账号", trigger: "blur" },
-          //长度
+          { required: true, message:"账号不能为空", trigger: "blur" },
           { min: 3, max: 6, message: "账号长度 3~6 位", trigger: "blur" }
         ],
         //密码
@@ -165,8 +190,8 @@ export default {
     resetForm() {
       // 重置表单
       this.$refs.accountAddForm.resetFields();
-    }
-  }
+    },
+  },
 };
 </script>
 <style lang="less">

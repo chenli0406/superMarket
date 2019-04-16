@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var accountRouter = require('./routes/account');
 var goodsRouter = require('./routes/goods');
+var loginRouter = require('./routes/login');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/account',accountRouter)
 app.use('/goods',goodsRouter)
+app.use('/login',loginRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -43,6 +45,6 @@ app.use(function(err, req, res, next) {
 });
 //监听端口
 app.listen(666,()=>{
-  console.log("success server!,地址是:http://localhost:666");
+  console.log("success server!,地址是:http://127.0.0.1:666");
 })
 module.exports = app;

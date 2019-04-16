@@ -31,7 +31,8 @@ export default {
     },
     methods: {
        onSubmit(){
-
+  console.log(1);
+  
        } 
     }
 }
